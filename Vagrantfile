@@ -6,7 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-    BOX_IMAGE = "hashicorp/precise64"
+    BOX_IMAGE = "ubuntu/impish64"
     BASE_NETWORK = "10.10.20"
 
     PROXY_HTTP = "http://10.0.2.2:5865"
@@ -53,10 +53,12 @@ Vagrant.configure("2") do |config|
             vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
             #vb.gui = true #enable only for debugging
         end
+        config.vm.synced_folder "~/Vagrant/M340-Vagrant/www", "/var/www", automount: true
         
         #provisioning
         webconfig.vm.provision "shell", path: "./scripts/provision_update.sh"
-        #webconfig.vm.provision "shell", path: "./scripts/provision_apache.sh"
+        webconfig.vm.provision "shell", path: "./scripts/provision_apache.sh"
+        webconfig.vm.provision "shell", path: "./scripts/provision_php.sh"
       end
 
 
@@ -98,7 +100,7 @@ Vagrant.configure("2") do |config|
         
         #provisioning
         dbconfig.vm.provision "shell", path: "./scripts/provision_update.sh"
-        #dbconfig.vm.provision "shell", path: "./scripts/provision_apache.sh"
+        dbconfig.vm.provision "shell", path: "./scripts/provision_mysql.sh"
     end
     
 end
